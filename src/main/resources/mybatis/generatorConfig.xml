@@ -55,6 +55,7 @@
 
 
 
+        <table schema="myapp" tableName="blog_content"></table>
         <table schema="myapp" tableName="cms_file"></table>
         <table schema="myapp" tableName="sys_dept"></table>
         <table schema="myapp" tableName="sys_dict"></table>
