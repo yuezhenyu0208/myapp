@@ -9,7 +9,7 @@ mybatis:
   #实体类所做包
   type-aliases-package: learning.model2
   #mapper.xml所在位置
-  mapper-locations: classpath:mybatis/mapper/*.xml
+  mapper-locations: classpath:mybatis/mapper/**/*.xml
 server:
   port: 9000
   servlet:

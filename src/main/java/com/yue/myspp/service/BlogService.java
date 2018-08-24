@@ -2,7 +2,7 @@ package com.yue.myspp.service;
 
 import com.yue.myspp.common.PageUtil;
 import com.yue.myspp.common.R;
-import com.yue.myspp.dao.BlogContentMapper;
+import com.yue.myspp.dao.mapper.genetrator.BlogContentMapper;
 import com.yue.myspp.entity.BlogContent;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package com.yue.myspp.dao;
+package com.yue.myspp.dao.mapper.genetrator;
 
 import com.yue.myspp.entity.SysMenu;
 import com.yue.myspp.entity.SysMenuExample;

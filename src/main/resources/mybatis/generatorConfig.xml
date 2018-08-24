@@ -34,14 +34,14 @@
 
         <!--生成映射文件存放位置-->
         <!--同样Mac用户：targetProject 为全路径-->
-        <sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources/mybatis">
+        <sqlMapGenerator targetPackage="mapper/genetrator" targetProject="src/main/resources/mybatis">
             <!-- enableSubPackages:是否让schema作为包的后缀 -->
             <property name="enableSubPackages" value="false"/>
         </sqlMapGenerator>
 
         <!--生成Dao类存放位置,mapper接口生成的位置-->
         <!--同样Mac用户：targetProject 为全路径-->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.yue.myspp.dao" targetProject="src/main/java">
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.yue.myspp.dao.mapper.genetrator" targetProject="src/main/java">
             <!-- enableSubPackages:是否让schema作为包的后缀 -->
             <property name="enableSubPackages" value="false"/>
         </javaClientGenerator>

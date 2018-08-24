@@ -2,6 +2,7 @@ package com.yue.myspp.config.shiro;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import javax.servlet.Filter;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
@@ -30,6 +31,9 @@ public class ShiroConfig {
         System.out.println("ShiroConfiguration.shirFilter()");
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         shiroFilterFactoryBean.setSecurityManager(securityManager);
+        Map<String, Filter> filtersMap = new LinkedHashMap<String, Filter>();
+        filtersMap.put("myAccessControlFilter", new ShiroLoginFilter());
+        shiroFilterFactoryBean.setFilters(filtersMap);
 
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
         //注意过滤器配置顺序 不能颠倒
@@ -37,13 +41,16 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/logout", "logout");
         // 配置不会被拦截的链接 顺序判断
         filterChainDefinitionMap.put("/static/**", "anon");
+        filterChainDefinitionMap.put("/blog/**", "anon");
         filterChainDefinitionMap.put("/ajaxLogin", "anon");
         filterChainDefinitionMap.put("/login", "anon");
         filterChainDefinitionMap.put("/user/login", "anon");
+        filterChainDefinitionMap.put("/user/logout", "anon");
         filterChainDefinitionMap.put("/weixin", "anon");
-        filterChainDefinitionMap.put("/**", "authc");
+        filterChainDefinitionMap.put("/**", "myAccessControlFilter");
+        //shiroFilterFactoryBean.set
         //配置shiro默认登录界面地址，前后端分离中登录界面跳转应由前端路由控制，后台仅返回json数据
-        shiroFilterFactoryBean.setLoginUrl("/unauth");
+        //shiroFilterFactoryBean.setLoginUrl("/unauth");
         // 登录成功后要跳转的链接
 //        shiroFilterFactoryBean.setSuccessUrl("/index");
         //未授权界面;

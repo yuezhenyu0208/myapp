@@ -1,12 +1,10 @@
-package com.yue.myspp.dao;
+package com.yue.myspp.dao.mapper.genetrator;
 
 import com.yue.myspp.entity.SysUser;
 import com.yue.myspp.entity.SysUserExample;
 import java.util.List;
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-@Mapper
 public interface SysUserMapper {
     long countByExample(SysUserExample example);
 

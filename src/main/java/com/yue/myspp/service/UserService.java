@@ -2,7 +2,7 @@ package com.yue.myspp.service;
 
 import com.yue.myspp.common.MD5Util;
 import com.yue.myspp.common.R;
-import com.yue.myspp.dao.SysUserMapper;
+import com.yue.myspp.dao.mapper.genetrator.SysUserMapper;
 import com.yue.myspp.entity.SysUser;
 import com.yue.myspp.entity.SysUserExample;
 import java.util.List;
