@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class SysUser implements Serializable {
-    private Long userId;
+    private Long id;
 
     private String username;
 
@@ -42,14 +42,22 @@ public class SysUser implements Serializable {
 
     private String district;
 
+    private String weId;
+
+    private Long ssId;
+
+    private Date startTime;
+
+    private Date endTime;
+
     private static final long serialVersionUID = 1L;
 
-    public Long getUserId() {
-        return userId;
+    public Long getId() {
+        return id;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getUsername() {
@@ -194,5 +202,37 @@ public class SysUser implements Serializable {
 
     public void setDistrict(String district) {
         this.district = district == null ? null : district.trim();
+    }
+
+    public String getWeId() {
+        return weId;
+    }
+
+    public void setWeId(String weId) {
+        this.weId = weId == null ? null : weId.trim();
+    }
+
+    public Long getSsId() {
+        return ssId;
+    }
+
+    public void setSsId(Long ssId) {
+        this.ssId = ssId;
+    }
+
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
     }
 }

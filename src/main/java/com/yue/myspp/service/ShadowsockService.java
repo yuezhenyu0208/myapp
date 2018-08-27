@@ -1,0 +1,146 @@
+package com.yue.myspp.service;
+
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.yue.myspp.common.PageUtil;
+import com.yue.myspp.common.R;
+import com.yue.myspp.common.util.ShellUtil;
+import com.yue.myspp.dao.mapper.genetrator.SsShadowsockMapper;
+import com.yue.myspp.dao.mapper.genetrator.SysUserMapper;
+import com.yue.myspp.entity.BlogContent;
+import com.yue.myspp.entity.SsShadowsock;
+import com.yue.myspp.entity.SsShadowsockExample;
+import com.yue.myspp.entity.SysUser;
+import com.yue.myspp.entity.SysUserExample;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+import java.nio.charset.Charset;
+import java.util.Date;
+import java.util.List;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+
+@Service
+@Transactional
+public class ShadowsockService {
+
+    @Autowired
+    SsShadowsockMapper ssShadowsockMapper;
+    @Autowired
+    UserService userService;
+
+    public R findAll(){
+        List<SsShadowsock> ssShadowsocks = ssShadowsockMapper.selectByExample(null);
+        PageUtil<SsShadowsock> pageUtil = new PageUtil<>();
+        pageUtil.setList(ssShadowsocks);
+        return R.OK(pageUtil);
+    }
+    public R findOne(Long id){
+        return R.OK(ssShadowsockMapper.selectByPrimaryKey(id));
+    }
+    public SsShadowsock findByWeId(String weId){
+        SysUser sysUser = userService.findSysUserByWeId(weId);
+        if(sysUser==null){
+            return null;
+        }
+        Long ssid = sysUser.getSsId();
+        if(ssid ==null){
+            return null;
+        }
+        SsShadowsock ssShadowsock = ssShadowsockMapper.selectByPrimaryKey(ssid);
+        return ssShadowsock;
+    }
+    public R addOrUpdateShadowsock(SsShadowsock ssShadowsock){
+        if(ssShadowsock.getId() == null){
+            ssShadowsock.setSsIp("202.182.116.51");
+            ssShadowsock.setStatus(1);
+            ssShadowsock.setGmtCreate(new Date());
+            ssShadowsock.setGmtModified(new Date());
+        }
+        if(StringUtils.isEmpty(ssShadowsock.getMethod())){
+            ssShadowsock.setMethod("aes-256-cfb");
+        }
+        if(StringUtils.isEmpty(ssShadowsock.getPassword())){
+            ssShadowsock.setPassword("12345678a");
+        }
+        if(ssShadowsock.getSsPort() == null){
+            ssShadowsock.setSsPort(8386L);
+        }
+        SsShadowsockExample ssShadowsockExample = new SsShadowsockExample();
+        ssShadowsockExample.createCriteria().andSsPortEqualTo(ssShadowsock.getSsPort());
+        List<SsShadowsock> ssShadowsocks = ssShadowsockMapper.selectByExample(ssShadowsockExample);
+        if(CollectionUtils.isEmpty(ssShadowsocks)){
+            ssShadowsockMapper.insert(ssShadowsock);
+        }else{
+            ssShadowsock.setId(ssShadowsocks.get(0).getId());
+            ssShadowsockMapper.updateByPrimaryKey(ssShadowsock);
+        }
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("server","0.0.0.0");
+        jsonObject.put("server_ipv6","[::]");
+        jsonObject.put("local_address","127.0.0.1");
+        jsonObject.put("local_port",1080);
+        jsonObject.put("timeout",120);
+        jsonObject.put("method","aes-256-cfb");
+        jsonObject.put("protocol","origin");
+        jsonObject.put("protocol_param","");
+        jsonObject.put("obfs","plain");
+        jsonObject.put("obfs_param","");
+        jsonObject.put("redirect","");
+        jsonObject.put("dns_ipv6","false,");
+        jsonObject.put("fast_open","false,");
+        jsonObject.put("workers","");
+        List<SsShadowsock> list = ssShadowsockMapper.selectByExample(null);
+        JSONObject json = new JSONObject();
+        for (SsShadowsock ssShadow : list){
+            json.put(""+ssShadow.getSsPort(),ssShadow.getPassword());
+        }
+        jsonObject.put("port_password",json);
+        writeNIO(jsonObject.toJSONString());
+        String msg = ShellUtil.executeLinuxCmd("/etc/init.d/shadowsocks restart");
+        System.out.println(msg);
+        return R.OK();
+    }
+
+    private void writeNIO(String shadowsocks) {
+        String filename = "/etc/shadowsocks.json";
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(new File(filename));
+            FileChannel channel = fos.getChannel();
+            ByteBuffer src = Charset.forName("utf8").encode(shadowsocks);
+            // 字节缓冲的容量和limit会随着数据长度变化，不是固定不变的
+            System.out.println("初始化容量和limit：" + src.capacity() + ","
+                + src.limit());
+            int length = 0;
+
+            while ((length = channel.write(src)) != 0) {
+                /*
+                 * 注意，这里不需要clear，将缓冲中的数据写入到通道中后 第二次接着上一次的顺序往下读
+                 */
+                System.out.println("写入长度:" + length);
+            }
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+}

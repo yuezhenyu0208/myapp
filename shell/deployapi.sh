@@ -7,6 +7,6 @@ cd ../
 ./gradlew clean build
 cd shell
 #传输到服务器
-scp ../build/libs/myspp-0.0.1-SNAPSHOT.jar root@52tt.xyz:/opt/javaweb/jar/
+scp -l 8192 ../build/libs/myspp-0.0.1-SNAPSHOT.jar root@52tt.xyz:/opt/javaweb/jar/
 #远程执行脚本，启动服务器
 ssh root@52tt.xyz "/opt/javaweb/jar/deployapi.sh"

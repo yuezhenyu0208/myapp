@@ -67,5 +67,8 @@
         <table schema="myapp" tableName="sys_user"></table>
         <table schema="myapp" tableName="sys_user_plus"></table>
         <table schema="myapp" tableName="sys_user_role"></table>
+        <table schema="myapp" tableName="ss_shadowsock">
+            <generatedKey column="id" sqlStatement="MySql" identity="true" />
+        </table>
     </context>
 </generatorConfiguration>
