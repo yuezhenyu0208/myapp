@@ -1,5 +1,7 @@
 package com.yue.myspp.common;
 
+import com.yue.myspp.common.enums.ResultEnum;
+
 public class R {
     private Integer code;
     private String msg;
@@ -41,6 +43,12 @@ public class R {
         R r = new R();
         r.code=code;
         r.msg = msg;
+        return r;
+    }
+    public static R result(ResultEnum resultEnum) {
+        R r = new R();
+        r.code=resultEnum.getCode();
+        r.msg = resultEnum.getMsg();
         return r;
     }
     public static R result(Integer code, Object data) {

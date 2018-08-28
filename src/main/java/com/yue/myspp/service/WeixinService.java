@@ -35,7 +35,8 @@ public class WeixinService {
             + "4：查询剩余帐号使用期限\n"
             + "5：查询个人id\n"
             + "6：获取帐号及充值\n"
-            + "注意个人id在充值时需要提供，请务必注意，不要搞错了！";
+            + "注意个人id在充值时需要提供，请务必注意，不要搞错了！\n"
+            + "本服务仅面向海外华人用户，中华人民共和国境内居民禁止使用，禁止通过本服务发表！";
         if(MsgTypeEnum.event.getMsgType().equals(weixinRequestPojo.getMsgType())){
             if(EventEnum.subscribe.equals(weixinRequestPojo.getEvent())){
                 //新用户订阅

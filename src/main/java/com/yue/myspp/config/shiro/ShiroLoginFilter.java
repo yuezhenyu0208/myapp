@@ -1,6 +1,7 @@
 package com.yue.myspp.config.shiro;
 import com.alibaba.fastjson.JSONObject;
 import com.yue.myspp.common.R;
+import com.yue.myspp.common.enums.ResultEnum;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 
 import javax.servlet.ServletRequest;
@@ -29,7 +30,7 @@ public class ShiroLoginFilter extends FormAuthenticationFilter {
             httpServletResponse.setContentType("application/json");
             httpServletResponse.setHeader("Access-Control-Allow-Credentials","true");
             httpServletResponse.setHeader("Access-Control-Allow-Origin",httpServletRequest.getHeader("Origin"));
-            R r = R.result(105,"登陆失败，请重新登录");
+            R r = R.result(ResultEnum.NOLOGIN);
 
            /* resultData.setResult(1);
             resultData.setCode(403);

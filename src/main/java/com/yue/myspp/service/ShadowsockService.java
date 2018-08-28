@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.yue.myspp.common.PageUtil;
 import com.yue.myspp.common.R;
+import com.yue.myspp.common.util.CreateJSONFileUtil;
 import com.yue.myspp.common.util.ShellUtil;
 import com.yue.myspp.dao.mapper.genetrator.SsShadowsockMapper;
 import com.yue.myspp.dao.mapper.genetrator.SysUserMapper;
@@ -45,6 +46,11 @@ public class ShadowsockService {
     public R findOne(Long id){
         return R.OK(ssShadowsockMapper.selectByPrimaryKey(id));
     }
+    public R deleteOne(Long id){
+        ssShadowsockMapper.deleteByPrimaryKey(id);
+        updateShadow();
+        return R.OK();
+    }
     public SsShadowsock findByWeId(String weId){
         SysUser sysUser = userService.findSysUserByWeId(weId);
         if(sysUser==null){
@@ -80,11 +86,16 @@ public class ShadowsockService {
             ssShadowsockMapper.insert(ssShadowsock);
         }else{
             ssShadowsock.setId(ssShadowsocks.get(0).getId());
-            ssShadowsockMapper.updateByPrimaryKey(ssShadowsock);
+            ssShadowsockMapper.updateByPrimaryKeySelective(ssShadowsock);
         }
+        updateShadow();
+        return R.OK();
+    }
+
+    public String updateShadow(){
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("server","0.0.0.0");
-        jsonObject.put("server_ipv6","[::]");
+        //jsonObject.put("server_ipv6","[::]");
         jsonObject.put("local_address","127.0.0.1");
         jsonObject.put("local_port",1080);
         jsonObject.put("timeout",120);
@@ -94,53 +105,21 @@ public class ShadowsockService {
         jsonObject.put("obfs","plain");
         jsonObject.put("obfs_param","");
         jsonObject.put("redirect","");
-        jsonObject.put("dns_ipv6","false,");
-        jsonObject.put("fast_open","false,");
-        jsonObject.put("workers","");
+        jsonObject.put("dns_ipv6",false);
+        jsonObject.put("fast_open",false);
+        jsonObject.put("workers",1);
         List<SsShadowsock> list = ssShadowsockMapper.selectByExample(null);
         JSONObject json = new JSONObject();
         for (SsShadowsock ssShadow : list){
             json.put(""+ssShadow.getSsPort(),ssShadow.getPassword());
         }
         jsonObject.put("port_password",json);
-        writeNIO(jsonObject.toJSONString());
+        CreateJSONFileUtil.createJsonFile(jsonObject.toJSONString(),"/etc/shadowsocks.json");
+        //writeNIO(jsonObject.toJSONString());
         String msg = ShellUtil.executeLinuxCmd("/etc/init.d/shadowsocks restart");
         System.out.println(msg);
-        return R.OK();
+        return msg;
     }
 
-    private void writeNIO(String shadowsocks) {
-        String filename = "/etc/shadowsocks.json";
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream(new File(filename));
-            FileChannel channel = fos.getChannel();
-            ByteBuffer src = Charset.forName("utf8").encode(shadowsocks);
-            // 字节缓冲的容量和limit会随着数据长度变化，不是固定不变的
-            System.out.println("初始化容量和limit：" + src.capacity() + ","
-                + src.limit());
-            int length = 0;
-
-            while ((length = channel.write(src)) != 0) {
-                /*
-                 * 注意，这里不需要clear，将缓冲中的数据写入到通道中后 第二次接着上一次的顺序往下读
-                 */
-                System.out.println("写入长度:" + length);
-            }
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (fos != null) {
-                try {
-                    fos.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
 
 }

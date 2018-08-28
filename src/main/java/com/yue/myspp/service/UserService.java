@@ -2,6 +2,7 @@ package com.yue.myspp.service;
 
 import com.yue.myspp.common.MD5Util;
 import com.yue.myspp.common.R;
+import com.yue.myspp.common.enums.ResultEnum;
 import com.yue.myspp.dao.mapper.genetrator.SysUserMapper;
 import com.yue.myspp.entity.SsShadowsock;
 import com.yue.myspp.entity.SysUser;
@@ -30,7 +31,7 @@ public class UserService {
     public R regist(String username,String pasword){
         SysUser sysUser = findUserByName(username);
         if(sysUser!=null){
-            R.result(103,"用户名已存在");
+            R.result(ResultEnum.PASSWORD_REPEAT);
         }
         sysUser = new SysUser();
         sysUser.setUsername(username);

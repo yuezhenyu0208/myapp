@@ -1,6 +1,7 @@
 package com.yue.myspp.web.controller;
 
 import com.yue.myspp.common.R;
+import com.yue.myspp.common.enums.ResultEnum;
 import com.yue.myspp.entity.SysUser;
 import com.yue.myspp.service.UserService;
 import javax.servlet.http.Cookie;
@@ -39,19 +40,19 @@ public class UserController {
             subject.login(token);
             Cookie cookie = new Cookie("5ddddd2tt",username);
             response.addCookie(cookie);
-            return R.result(100,"成功");
+            return R.result(ResultEnum.SUCCESS);
 
         } catch (IncorrectCredentialsException e) {
             e.printStackTrace();
-            return R.result(101, "密码错误");
+            return R.result(ResultEnum.PASSWORD_ERROR);
         } catch (LockedAccountException e) {
-            return R.result(102, "登录失败，该用户已被冻结");
+            return R.result(ResultEnum.DONGJIE);
         } catch (AuthenticationException e) {
             e.printStackTrace();
-            return R.result(103, " 账号或密码不正确");
+            return R.result(ResultEnum.PASSWORD_ERROR);
         } catch (Exception e) {
             e.printStackTrace();
-            return R.result(500,"失败");
+            return R.result(ResultEnum.ERROR);
         }
 
     }
