@@ -20,11 +20,11 @@ public class ShadowsockController {
     ShadowsockService shadowsockService;
 
     @PostMapping
-    public R Shadowsock(SsShadowsock ssShadowsock){
-        return shadowsockService.addOrUpdateShadowsock(ssShadowsock);
+    public R shadowsock(SsShadowsock ssShadowsock,Long uid){
+        return shadowsockService.addOrUpdateShadowsock(ssShadowsock,uid);
     }
     @GetMapping
-    public R insertShadowsock(){
+    public R shadowsock(){
         return shadowsockService.findAll();
     }
     @GetMapping("/{id}")

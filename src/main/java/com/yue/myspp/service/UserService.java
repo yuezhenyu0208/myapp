@@ -18,6 +18,15 @@ public class UserService {
     @Autowired
     SysUserMapper sysUserMapper;
 
+    public SysUser saveOrUpdateSysUser(SysUser sysUser){
+        if(sysUser.getId()==null){
+            sysUserMapper.insert(sysUser);
+        }else{
+            sysUserMapper.updateByPrimaryKey(sysUser);
+        }
+        return sysUser;
+    }
+
     public SysUser findUserByName(String username){
         SysUserExample sysUserExample = new SysUserExample();
         sysUserExample.createCriteria().andUsernameEqualTo(username);
@@ -49,6 +58,10 @@ public class UserService {
             return null;
         }
         return list.get(0);
+    }
+
+    public SysUser findSysUserById(Long id){
+        return sysUserMapper.selectByPrimaryKey(id);
     }
 
 }

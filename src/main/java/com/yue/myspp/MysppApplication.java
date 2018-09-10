@@ -12,5 +12,6 @@ public class MysppApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(MysppApplication.class, args);
+		System.setProperty("tomcat.util.http.parser.HttpParser.requestTargetAllow","|,`");
 	}
 }

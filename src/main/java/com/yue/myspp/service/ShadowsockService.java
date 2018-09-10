@@ -63,7 +63,7 @@ public class ShadowsockService {
         SsShadowsock ssShadowsock = ssShadowsockMapper.selectByPrimaryKey(ssid);
         return ssShadowsock;
     }
-    public R addOrUpdateShadowsock(SsShadowsock ssShadowsock){
+    public R addOrUpdateShadowsock(SsShadowsock ssShadowsock,Long uid){
         if(ssShadowsock.getId() == null){
             ssShadowsock.setSsIp("202.182.116.51");
             ssShadowsock.setStatus(1);
@@ -87,7 +87,17 @@ public class ShadowsockService {
         }else{
             ssShadowsock.setId(ssShadowsocks.get(0).getId());
             ssShadowsockMapper.updateByPrimaryKeySelective(ssShadowsock);
+
         }
+        if(uid != null){
+            SysUser sysUser = userService.findSysUserById(uid);
+            if(sysUser!=null){
+                sysUser.setSsId(ssShadowsock.getId());
+                userService.saveOrUpdateSysUser(sysUser);
+            }
+        }
+
+        ssShadowsock.getId();
         updateShadow();
         return R.OK();
     }
