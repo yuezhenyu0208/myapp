@@ -78,7 +78,7 @@ public class WeixinService {
                         + "加密方式："+ssShadowsock.getMethod());
                 }
             }else if("2".equals(weixinRequestPojo.getContent())){
-                weixinBackPojo.setContent("复制这个网址 http://52tt.xyz 在浏览器打开");
+                weixinBackPojo.setContent("复制这个网址 http://202.182.116.51 在浏览器打开");
             }else if("3".equals(weixinRequestPojo.getContent())){
                 SysUser sysUser = userService.findSysUserByWeId(weid);
                 weixinBackPojo.setContent("帐号为："+sysUser.getUsername()+"\n"
@@ -88,7 +88,13 @@ public class WeixinService {
                 if(sysUser==null){
                     weixinBackPojo.setContent("对不起，您暂未购买帐号。");
                 }else{
-                    weixinBackPojo.setContent("帐号使用截至日期为："+sysUser.getEndTime());
+                    if(sysUser.getEndTime()!=null){
+
+                        weixinBackPojo.setContent("帐号使用截至日期为："+sysUser.getEndTime());
+                    }else{
+                        weixinBackPojo.setContent("帐号使用截至日期为：永久");
+
+                    }
                 }
             }else if("5".equals(weixinRequestPojo.getContent())){
                 SysUser sysUser = userService.findSysUserByWeId(weixinRequestPojo.getFromUserName());
