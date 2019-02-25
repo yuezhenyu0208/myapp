@@ -38,4 +38,8 @@ public class CredentialsMatcher extends SimpleCredentialsMatcher{
         boolean flag = Objects.equals(inPassword, dbPassword);
         return flag;
     }
+
+    public static void main(String[] args) {
+        System.out.println(MD5Util.encrypt("admin", "19930308"));
+    }
 }

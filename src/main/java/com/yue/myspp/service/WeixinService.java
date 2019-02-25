@@ -34,7 +34,6 @@ public class WeixinService {
     ShadowsockService shadowsockService;
     public WeixinBackPojo handleRequest(WeixinRequestPojo weixinRequestPojo){
 
-        String weid = weixinRequestPojo.getFromUserName();
         WeixinBackPojo weixinBackPojo = null;
         if(weixinRequestPojo==null){
             weixinBackPojo =  new WeixinBackPojo();
@@ -43,6 +42,7 @@ public class WeixinService {
         }else{
             weixinBackPojo = new WeixinBackPojo(weixinRequestPojo);
         }
+        String weid = weixinRequestPojo.getFromUserName();
         weixinBackPojo.setMsgType(MsgTypeEnum.text.getMsgType());
         String notice = "欢迎关注微信公众号：请回复数字进行操作\n"
             + "1：查询shadowsock帐号\n"
